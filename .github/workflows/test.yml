@@ -17,7 +17,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
       - name: Install dependencies
-        run: forge install --no-commit
+        run: forge install
       - name: Show Forge version
         run: forge --version
       - name: Run Forge fmt
