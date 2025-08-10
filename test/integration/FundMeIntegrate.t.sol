@@ -18,7 +18,7 @@ contract FundMeIntegrate is Test {
     }
 
     function test_fundingAndWithdraw() public {
-        uint totalFunded = 0;
+        uint256 totalFunded = 0;
         for (uint160 i = 100; i < 110; i++) {
             address temp = address(100 + i);
             vm.prank(temp);

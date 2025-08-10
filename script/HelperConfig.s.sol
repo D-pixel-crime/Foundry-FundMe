@@ -10,6 +10,7 @@ contract HelperConfig is Script {
     struct Config {
         address ethToUsdProxy;
     }
+
     Config public currConfig;
 
     constructor() {
@@ -36,10 +37,7 @@ contract HelperConfig is Script {
 
         vm.startBroadcast();
         uint8 decimals = 8;
-        MockV3Aggregator mock = new MockV3Aggregator(
-            decimals,
-            2000 * int256(10 ** decimals)
-        ); // Initial roundData;
+        MockV3Aggregator mock = new MockV3Aggregator(decimals, 2000 * int256(10 ** decimals)); // Initial roundData;
         vm.stopBroadcast();
 
         return address(mock);

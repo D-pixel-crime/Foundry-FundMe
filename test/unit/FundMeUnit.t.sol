@@ -7,8 +7,10 @@ import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
 
 contract FundMeTest is Test {
     FundMe currFundMeContract;
-    event fund_added(address, uint);
-    event funds_withdrawn(uint);
+
+    event fund_added(address, uint256);
+    event funds_withdrawn(uint256);
+
     address defaultSender = msg.sender;
 
     function setUp() external {
@@ -57,7 +59,7 @@ contract FundMeTest is Test {
         vm.deal(prankAddress, 10 ether);
         currFundMeContract.fund{value: 1 ether}();
 
-        uint balance = currFundMeContract.getBalance();
+        uint256 balance = currFundMeContract.getBalance();
         vm.expectEmit(true, true, false, true, address(currFundMeContract));
         emit funds_withdrawn(balance);
         vm.prank(defaultSender);

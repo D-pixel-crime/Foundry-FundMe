@@ -8,33 +8,33 @@ error withdraw_failed();
 error insufficient_funds();
 
 library conversionMath {
-    function convertEthToUSD(
-        uint val,
-        AggregatorV3Interface proxy
-    ) internal view returns (uint) {
+    function convertEthToUSD(uint256 val, AggregatorV3Interface proxy) internal view returns (uint256) {
         uint8 decimals = proxy.decimals();
-        (, int256 answer, , , ) = proxy.latestRoundData();
-        uint rate = uint(answer) * 10 ** (18 - decimals);
+        (, int256 answer,,,) = proxy.latestRoundData();
+        uint256 rate = uint256(answer) * 10 ** (18 - decimals);
 
         return (rate * val) / 1e18;
     }
 }
 
 contract FundMe {
-    using conversionMath for uint;
+    using conversionMath for uint256;
+
     modifier onlyOwner() {
         if (msg.sender != owner) {
             revert not_owner();
         }
         _;
     }
-    event funds_withdrawn(uint);
-    event fund_added(address, uint);
+
+    event funds_withdrawn(uint256);
+    event fund_added(address, uint256);
+
     address public immutable owner;
-    uint public constant MIN_USD = 5e18;
+    uint256 public constant MIN_USD = 5e18;
     AggregatorV3Interface public proxy;
 
-    mapping(address => uint) public individualFundings;
+    mapping(address => uint256) public individualFundings;
     address[] public funders;
 
     constructor(address proxy_addr) {
@@ -42,11 +42,11 @@ contract FundMe {
         proxy = AggregatorV3Interface(proxy_addr);
     }
 
-    function getVersion() public view returns (uint) {
+    function getVersion() public view returns (uint256) {
         return proxy.version();
     }
 
-    function getBalance() public view returns (uint) {
+    function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
@@ -63,14 +63,12 @@ contract FundMe {
     }
 
     function withdraw() public onlyOwner {
-        for (uint i = 0; i < funders.length; i++) {
+        for (uint256 i = 0; i < funders.length; i++) {
             individualFundings[funders[i]] = 0;
         }
         funders = new address[](0);
-        uint balance = address(this).balance;
-        (bool success, ) = payable(owner).call{value: address(this).balance}(
-            ""
-        );
+        uint256 balance = address(this).balance;
+        (bool success,) = payable(owner).call{value: address(this).balance}("");
 
         if (!success) {
             revert withdraw_failed();
