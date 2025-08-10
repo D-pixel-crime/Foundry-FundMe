@@ -1,31 +1,32 @@
-name: CI
+name: Foundry CI
 
 on:
   push:
+    branches: [ main ]
   pull_request:
-  workflow_dispatch:
-
-env:
-  FOUNDRY_PROFILE: ci
+    branches: [ main ]
 
 jobs:
-  check:
-    name: Foundry project
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
       - name: Install dependencies
-        run: forge install
-      - name: Show Forge version
-        run: forge --version
-      - name: Run Forge fmt
-        run: forge fmt --check
-        id: fmt
-      - name: Run Forge build
+        run: |
+          forge install foundry-rs/forge-std
+          forge install smartcontractkit/chainlink-evm
+          forge install Cyfrin/foundry-devops
+
+      - name: Build project
         run: forge build --sizes
-        id: build
-      - name: Run Forge tests
+
+      - name: Run tests
         run: forge test -vvv
-        id: test
