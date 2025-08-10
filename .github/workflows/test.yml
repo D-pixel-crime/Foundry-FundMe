@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
-        run: forge install --no-commit
+        run: forge install
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
       - name: Show Forge version
